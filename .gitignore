@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+*.pyo
+.vendor/
+*.egg-info/
+.env
+credentials
+paper-state.json
+.DS_Store
+AUDIT.md

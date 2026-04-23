@@ -1,0 +1,78 @@
+#!/usr/bin/env bash
+# API LLM Trader — Credential Configuration
+set -euo pipefail
+
+CREDS_DIR="$HOME/.aftermath/api-llm-trader"
+CREDS_FILE="$CREDS_DIR/credentials"
+
+printf "API LLM Trader — Credential Setup\n\n"
+
+# Network
+printf "Network:\n  1) Mainnet (default)\n  2) Testnet\n"
+read -rp "Choice [1]: " net_choice
+case "${net_choice:-1}" in
+  2) HOST="https://testnet.aftermath.finance" ;;
+  *) HOST="https://aftermath.finance" ;;
+esac
+printf "  → %s\n\n" "$HOST"
+
+# Wallet address
+read -rp "Sui wallet address (0x...): " WALLET
+if [[ ! "$WALLET" =~ ^0x[0-9a-fA-F]{64}$ ]]; then
+  printf "WARNING: address doesn't look like a standard Sui address\n"
+fi
+
+# Discover account
+printf "\nDiscovering accounts for %s...\n" "$WALLET"
+ACCOUNTS=$(curl -s -X POST "$HOST/api/perpetuals/accounts/owned" \
+  -H "Content-Type: application/json" \
+  -d "{\"walletAddress\":\"$WALLET\",\"collateralCoinTypes\":[\"0xdba34672e30cb065b1f93e3ab55318768fd6fef66c15942c9f7cb846e2f900e7::usdc::USDC\"]}" 2>/dev/null || echo "{}")
+
+# Parse first account with capability type
+ACCOUNT_ID=""
+ACCOUNT_CAP_ID=""
+if command -v python3 &>/dev/null; then
+  eval "$(python3 -c "
+import json, sys
+try:
+    data = json.loads('''$ACCOUNTS''')
+    for a in data.get('accountCaps', []):
+        print('ACCOUNT_CAP_ID=\"%s\"' % a.get('objectId', ''))
+        print('ACCOUNT_ID=\"%s\"' % str(a.get('accountId', '')).rstrip('n'))
+        break
+except: pass
+" 2>/dev/null || true)"
+fi
+
+if [[ -n "$ACCOUNT_ID" ]]; then
+  printf "  Found account ID: %s\n" "$ACCOUNT_ID"
+else
+  read -rp "  No account found. Enter account ID manually: " ACCOUNT_ID
+fi
+if [[ -n "$ACCOUNT_CAP_ID" ]]; then
+  printf "  Found account cap: %s\n" "$ACCOUNT_CAP_ID"
+fi
+
+# Private key
+printf "\n"
+read -rsp "Sui private key (suiprivkey1..., hidden): " PRIVKEY
+printf "\n"
+if [[ ! "$PRIVKEY" =~ ^suiprivkey1 ]]; then
+  printf "WARNING: key doesn't start with suiprivkey1\n"
+fi
+
+# Write credentials
+mkdir -p "$CREDS_DIR"
+cat > "$CREDS_FILE" <<EOF
+# API LLM Trader credentials
+# Generated $(date -u +"%Y-%m-%dT%H:%M:%SZ")
+AFTERMATH_HOST=$HOST
+AFTERMATH_WALLET_ADDRESS=$WALLET
+AFTERMATH_ACCOUNT_ID=$ACCOUNT_ID
+AFTERMATH_ACCOUNT_CAP_ID=$ACCOUNT_CAP_ID
+AFTERMATH_PRIVATE_KEY=$PRIVKEY
+EOF
+chmod 600 "$CREDS_FILE"
+
+printf "\nCredentials written to %s (mode 600)\n" "$CREDS_FILE"
+printf "Verify: python3 scripts/query.py auth status\n"
