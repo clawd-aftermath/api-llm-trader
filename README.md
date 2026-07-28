@@ -1,6 +1,6 @@
 # API LLM Trader
 
-A skill that lets LLM agents trade on [Aftermath Finance](https://aftermath.finance) perpetuals through the native API. Install it into Claude Code, Cursor, Codex, or any agent that supports skills, then interact in natural language.
+A skill that lets LLM agents trade on [Aftermath V2](https://v2-preview.aftermath.finance) perpetuals through the native API. Install it into Claude Code, Cursor, Codex, or any agent that supports skills, then interact in natural language.
 
 > *"What's the funding rate on BTC right now?"*
 >
@@ -61,6 +61,13 @@ See [SKILL.md](SKILL.md) for the full command reference.
 - **Reads**: Native Aftermath API (`/api/perpetuals/*`), with no CCXT dependency for core market/account reads
 - **Writes**: Native transaction builders → Sui Ed25519 signing → Sui JSON-RPC submission
 - **No SDK vendoring**: Pure HTTP via `requests` + `PyNaCl` for signing
+
+## Integration References
+
+- Site: https://v2-preview.aftermath.finance
+- Swagger: https://v2-preview.aftermath.finance/docs
+- OpenAPI: https://v2-preview.aftermath.finance/api/openapi/spec.json
+- Canonical skills: https://github.com/AftermathFinance/skills
 
 ## License
 

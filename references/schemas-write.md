@@ -9,7 +9,7 @@ All write commands return the API request, native transaction preview, and Sui e
 
 ## order market / order limit
 ```json
-{"symbol":"BTCUSD","marketId":"0x...","ok":true,"request":{"side":0,"size":"10000000n","price":"77877800000n"},"execution":{"digest":"..."}}
+{"symbol":"BTCUSD","marketId":"0x...","ok":true,"request":{"side":0,"size":"10000000n","price":"77877800000000n"},"execution":{"digest":"..."}}
 ```
 
 ## order cancel
@@ -19,7 +19,7 @@ All write commands return the API request, native transaction preview, and Sui e
 
 ## order cancel-and-place
 ```json
-{"symbol":"BTCUSD","marketId":"0x...","ok":true,"request":{"orderIdsToCancel":["123n"],"ordersToPlace":[{"side":0,"price":"77877800000n","size":"10000000n"}]},"execution":{"digest":"..."}}
+{"symbol":"BTCUSD","marketId":"0x...","ok":true,"request":{"orderIdsToCancel":["123n"],"ordersToPlace":[{"side":0,"price":"77877800000000n","size":"10000000n"}]},"execution":{"digest":"..."}}
 ```
 
 ## position leverage
