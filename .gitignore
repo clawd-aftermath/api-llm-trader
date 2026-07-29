@@ -8,3 +8,11 @@ credentials
 paper-state.json
 .DS_Store
 AUDIT.md
+
+# macOS resource forks
+._*
+.DS_Store
+
+# local env
+.env
+__pycache__/
