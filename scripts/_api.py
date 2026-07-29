@@ -1,7 +1,7 @@
 """HTTP clients for Aftermath Finance REST API and Sui JSON-RPC.
 
 No SDK vendoring — pure requests-based HTTP calls against:
-- Aftermath perpetuals API: https://aftermath.finance/api/perpetuals/*
+- Aftermath V2 perpetuals API: https://v2-preview.aftermath.finance/api/perpetuals/*
 - Sui fullnode JSON-RPC: https://fullnode.mainnet.sui.io:443
 """
 
@@ -11,7 +11,7 @@ import sys
 
 from _paths import credentials_path
 
-DEFAULT_HOST = "https://aftermath.finance"
+DEFAULT_HOST = "https://v2-preview.aftermath.finance"
 DEFAULT_SUI_RPC = "https://fullnode.mainnet.sui.io:443"
 TESTNET_HOST = "https://testnet.aftermath.finance"
 TESTNET_SUI_RPC = "https://fullnode.testnet.sui.io:443"
@@ -133,7 +133,7 @@ def resolve_with_source(name):
 
 def get_aftermath_host():
     """Resolve the Aftermath API host."""
-    return get_config_value("AFTERMATH_HOST", DEFAULT_HOST)
+    return str(get_config_value("AFTERMATH_HOST", DEFAULT_HOST)).strip().rstrip("/")
 
 
 def get_sui_rpc_url():
@@ -224,14 +224,16 @@ def _request_json(method, url, endpoint, body=None):
 def af_post(path, body=None, host=None):
     """POST to an Aftermath API endpoint. Returns parsed JSON or raises."""
     _ensure_requests()
-    url = (host or get_aftermath_host()) + path
+    base_url = str(host or get_aftermath_host()).strip().rstrip("/")
+    url = base_url + path
     return _request_json("POST", url, path, body=body)
 
 
 def af_get(path, host=None):
     """GET from an Aftermath API endpoint. Returns parsed JSON."""
     _ensure_requests()
-    url = (host or get_aftermath_host()) + path
+    base_url = str(host or get_aftermath_host()).strip().rstrip("/")
+    url = base_url + path
     return _request_json("GET", url, path)
 
 

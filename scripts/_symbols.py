@@ -20,7 +20,9 @@ from _paths import symbol_cache_path
 _CACHE_TTL_SECONDS = 300
 _LIVE_CACHE = {}  # host -> cache entry
 _SIZE_SCALE = Decimal("1000000000")
-_PRICE_SCALE = Decimal("1000000")
+# V2 native order prices use B9 fixed-point integers. This is independent of
+# marketParams.scalingFactor, which is not the native order-price unit.
+_PRICE_SCALE = Decimal("1000000000")
 
 
 def _normalize_host(host):

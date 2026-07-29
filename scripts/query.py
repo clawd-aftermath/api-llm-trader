@@ -279,13 +279,19 @@ def cmd_market_candles(args):
         market_id, sym, _ = resolve_symbol(args.symbol)
     except ValueError as e:
         error(str(e))
+    # RESOLUTION_MS is still used to compute the lookback window, but the API
+    # itself takes `resolution` as a CCXT-style timeframe STRING ("1m", "1h",
+    # "1d"). The pre-v3 integer `intervalMs` field was removed in v3.0.0 —
+    # sending it makes the request fail schema validation.
+    # Verified against the live spec: required = marketId, fromTimestamp,
+    # toTimestamp, resolution.
     interval_ms = RESOLUTION_MS[args.resolution]
     now_ms = int(time.time() * 1000)
     from_ts = now_ms - interval_ms * args.count_back
     try:
         data = af_post("/api/perpetuals/market/candle-history", {
             "marketId": market_id,
-            "intervalMs": interval_ms,
+            "resolution": args.resolution,
             "fromTimestamp": from_ts,
             "toTimestamp": now_ms,
         })

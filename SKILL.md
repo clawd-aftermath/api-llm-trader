@@ -116,7 +116,7 @@ No credentials required. Simulates against live orderbooks.
 | `AFTERMATH_WALLET_ADDRESS` | For writes | Sui wallet address (`0x...`) |
 | `AFTERMATH_ACCOUNT_ID` | For writes | Numeric perpetuals account ID |
 | `AFTERMATH_ACCOUNT_CAP_ID` | Optional | Account capability object ID |
-| `AFTERMATH_HOST` | No | API host (default: `https://aftermath.finance`) |
+| `AFTERMATH_HOST` | No | API host (default: `https://v2-preview.aftermath.finance`) |
 | `SUI_RPC_URL` | No | Sui fullnode (default: auto from host) |
 | `AFTERMATH_PAPER_STATE_PATH` | No | Paper state file path |
 
@@ -138,3 +138,9 @@ Set via env vars or `~/.aftermath/api-llm-trader/credentials` file.
 - Reading `.env` files containing keys
 
 Private keys are wrapped in `SecretValue` that prints `[REDACTED]`.
+
+## Canonical API References
+
+- Swagger: https://v2-preview.aftermath.finance/docs
+- OpenAPI: https://v2-preview.aftermath.finance/api/openapi/spec.json
+- Maintained Aftermath skills: https://github.com/AftermathFinance/skills
