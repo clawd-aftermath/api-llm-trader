@@ -50,14 +50,9 @@ from _paths import credentials_path
 # 1. Host — exactly ONE definition
 # ===========================================================================
 
-# https://v2-preview.aftermath.finance IS production mainnet. Despite the
-# hostname it is not a preview or a testbed: it is the live relaunch API. The
-# legacy bare host is retired and no longer serves these routes at all.
-#
-# This is the only hostname literal in the tree outside tests, docs and the
-# vendored skills. The relaunch domain will change; a repo with the host smeared
-# across 40 files is a repo that breaks that day.
-AF_API_BASE_URL = "https://v2-preview.aftermath.finance"
+# The apex host is the launched production API. This is the only production
+# hostname literal in live adapter code so future host migrations stay local.
+AF_API_BASE_URL = "https://aftermath.finance"
 
 #: Env var that overrides the host without touching source.
 HOST_ENV_VAR = "AFTERMATH_API_BASE_URL"

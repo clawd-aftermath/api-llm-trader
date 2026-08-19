@@ -36,7 +36,7 @@ class ApiClientTests(unittest.TestCase):
         with patch.dict(os.environ, {}, clear=True):
             self.assertEqual(
                 _api.get_aftermath_host(),
-                "https://v2-preview.aftermath.finance",
+                "https://aftermath.finance",
             )
 
     def test_configured_host_is_normalized(self):
@@ -53,10 +53,10 @@ class ApiClientTests(unittest.TestCase):
             _api.af_post(
                 "/api/perpetuals/all-markets",
                 {"collateralCoinType": "coin"},
-                host="https://v2-preview.aftermath.finance",
+                host="https://aftermath.finance",
             )
         post.assert_called_once_with(
-            "https://v2-preview.aftermath.finance/api/perpetuals/all-markets",
+            "https://aftermath.finance/api/perpetuals/all-markets",
             json={"collateralCoinType": "coin"},
             timeout=30,
         )

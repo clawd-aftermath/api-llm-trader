@@ -226,4 +226,4 @@ def test_ships_disarmed():
 
 def test_host_is_the_v2_production_host():
     adapter = AftermathMockAdapter()
-    assert adapter.base_url.startswith("https://v2-preview.aftermath.finance")
+    assert adapter.base_url == "https://aftermath.finance"

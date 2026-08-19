@@ -12,7 +12,7 @@ printf "Network:\n  1) Mainnet (default)\n  2) Testnet\n"
 read -rp "Choice [1]: " net_choice
 case "${net_choice:-1}" in
   2) HOST="https://testnet.aftermath.finance" ;;
-  *) HOST="https://v2-preview.aftermath.finance" ;;
+  *) HOST="https://aftermath.finance" ;;
 esac
 printf "  → %s\n\n" "$HOST"
 

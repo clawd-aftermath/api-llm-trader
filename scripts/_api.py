@@ -1,7 +1,7 @@
 """HTTP clients for Aftermath Finance REST API and Sui JSON-RPC.
 
 No SDK vendoring — pure requests-based HTTP calls against:
-- Aftermath V2 perpetuals API: https://v2-preview.aftermath.finance/api/perpetuals/*
+- Aftermath V2 perpetuals API: https://aftermath.finance/api/perpetuals/*
 - Sui fullnode JSON-RPC: https://fullnode.mainnet.sui.io:443
 """
 
@@ -11,7 +11,7 @@ import sys
 
 from _paths import credentials_path
 
-DEFAULT_HOST = "https://v2-preview.aftermath.finance"
+DEFAULT_HOST = "https://aftermath.finance"
 DEFAULT_SUI_RPC = "https://fullnode.mainnet.sui.io:443"
 TESTNET_HOST = "https://testnet.aftermath.finance"
 TESTNET_SUI_RPC = "https://fullnode.testnet.sui.io:443"

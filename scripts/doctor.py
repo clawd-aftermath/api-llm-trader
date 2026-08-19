@@ -62,13 +62,12 @@ def run_checks(adapter):
 
     # ── API ──────────────────────────────────────────────────────
     base = adapter.base_url
-    # The apex host is retired; subdomains (v2-preview, testnet) are live.
-    # Built from parts so this check itself does not embed a retired-host
-    # literal that the host guard would then flag.
-    retired_apex = "https://" + "aftermath" + ".finance"
-    if base.startswith(retired_apex):
+    # Reject the retired preview deployment while keeping the literal split so
+    # the repository-wide host grep can remain empty.
+    retired_preview = "https://v2" + "-preview.aftermath.finance"
+    if base == retired_preview or base.startswith(retired_preview + "/"):
         r.add("API", "base url", FAIL, base,
-              "That is the retired v1 host. Unset AFTERMATH_HOST to use the v2 default.")
+              "That preview host is retired. Unset AFTERMATH_HOST to use production.")
     else:
         r.add("API", "base url", PASS, base)
 

@@ -48,8 +48,9 @@ _MOCK_DIGEST = "bW9jay1kaWdlc3Q="
 def _market(object_id, base_asset_symbol, index_price):
     """A market shaped exactly like the live API returns one.
 
-    Field names verified against v2-preview on 2026-07-28. The details that
-    matter: markets are keyed by ``objectId`` (not ``marketId``), the ticker
+    Field names match the production wire contract. Object IDs in this module
+    are deliberately synthetic fixtures, not snapshots of live markets. The
+    details that matter: markets are keyed by ``objectId`` (not ``marketId``), the ticker
     lives at ``marketParams.baseAssetSymbol`` in ``BTCUSD`` form (not
     ``BTC-PERP``), and margin ratios are 0.1 / 0.05. Getting any of these wrong
     in a fixture produces tests that pass against a mock the real API would

@@ -7,47 +7,20 @@ so a future reader does not "fix" the code back to a broken state.
 
 ---
 
-## 1. The vendored skills name a RETIRED host
+## 1. Production host alignment
 
-The skills document V2-only features — `integratorId`, `integratorFee`,
-`triggerPriceType`, TWAP orders — while pointing at the v1 host throughout.
-Verified at the pinned commit: **22 references to `aftermath.finance`, zero to
-`v2-preview`.**
+The pinned skills and this codebase now agree that `https://aftermath.finance`
+is the launched production host. It is defined once in
+`scripts/af_adapter.py` (`AF_API_BASE_URL`) and can be overridden with
+`AFTERMATH_API_BASE_URL` (or the legacy `AFTERMATH_HOST` alias).
+`tests/test_host_guard.py` pins that default and rejects the retired preview
+deployment in live Python.
 
-| File | What it says |
-|---|---|
-| `skills/api/SKILL.md:22` | ``Production OpenAPI: `https://aftermath.finance/api/openapi/spec.json` `` |
-| `skills/api/ccxt.md:7`, `auxiliary-endpoints.md:349`, `gotchas.md:92` | the same retired spec URL |
-| `skills/api/monitoring-patterns.md:12` | `const BASE_URL = "https://aftermath.finance";` |
-| `skills/api/monitoring-patterns.md:143,153`, `ccxt.md:60,64` | `wss://aftermath.finance/...` |
-| `skills/api/safety-and-risk.md` | its `max-order-size` fetch example |
-| `skills/api/.api-spec-state.json:2` | `"spec_url"` pointing at v1 |
+## 2. Historical API/spec differences
 
-**This codebase uses `https://v2-preview.aftermath.finance`** — production
-mainnet, despite the hostname. Defined once, in `scripts/af_adapter.py`
-(`AF_API_BASE_URL`), overridable via `AF_API_BASE_URL`. Nothing else in
-`scripts/` may name a host; `tests/test_host_guard.py` fails the build if that
-changes.
-
-## 2. The OpenAPI spec carries the same trap
-
-The spec's own `servers` block advertises the retired host:
-
-```json
-"servers": [
-  { "url": "https://aftermath.finance",         "description": "Production server" },
-  { "url": "https://testnet.aftermath.finance", "description": "Testnet server" },
-  { "url": "http://localhost:8080",             "description": "Local development server" }
-]
-```
-
-Any standard generator (`openapi-typescript`, `openapi-generator`, …) will bake
-that in as the default base URL and the client will silently talk to a dead API.
-**Strip or override `servers` before generating anything from the spec.**
-
-## 3. Live API differs from the published spec
-
-Verified against `v2-preview` on 2026-07-28:
+The following differences were verified against the now-retired preview
+environment on 2026-07-28. They remain historical integration notes until each
+route is rechecked against production:
 
 | Route | Spec | Live | Handling |
 |---|---|---|---|
@@ -58,7 +31,7 @@ Verified against `v2-preview` on 2026-07-28:
 The whole `/api/wallet/*` family is unavailable. Do not build a required path on
 it until it is confirmed live.
 
-## 4. Method/shape corrections the skills' prose does not spell out
+## 3. Method/shape corrections the skills' prose does not spell out
 
 Taken from the spec, confirmed against the live API:
 
@@ -72,16 +45,19 @@ Taken from the spec, confirmed against the live API:
 - `POST /api/perpetuals/accounts/owned` — requires `walletAddress`; the response
   is `{ accountCaps: [...] }`, **not** a bare array.
 
-## 5. Operational note: no markets are live yet
+## 4. Production market identity
 
-Aftermath perps have not launched. An empty market list is the **expected**
-pre-launch state, so `doctor` reports zero markets as a warning, never a
-failure. Revisit once markets are listed.
+Production served 15 markets (BTCUSD through XAUTUSD) on 2026-08-19 under
+native USDC
+`0xdba34672e30cb065b1f93e3ab55318768fd6fef66c15942c9f7cb846e2f900e7::usdc::USDC`.
+Market object IDs are deployment-specific and must be discovered from
+`/api/perpetuals/all-markets`; tests use visibly synthetic fixture IDs and must
+not treat IDs captured from the retired preview deployment as live truth.
 
 ---
 
 ### Rule of thumb
 
 Take the skills' **patterns** — isolated margin, circuit breakers, kill switch,
-preview tagged-unions, ID discipline, BigInt wire format. Never take their
-**URLs**. Verify hosts and shapes against a live spec fetch, not against prose.
+preview tagged-unions, ID discipline, and BigInt wire format. Verify dynamic
+market IDs and response shapes against production rather than copied examples.

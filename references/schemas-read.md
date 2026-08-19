@@ -2,7 +2,7 @@
 
 ## system status
 ```json
-{"status":"ok","markets_count":1,"timestamp":1785274453,"host":"https://v2-preview.aftermath.finance"}
+{"status":"ok","markets_count":15,"timestamp":1785274453,"host":"https://aftermath.finance"}
 ```
 
 ## market list
@@ -57,5 +57,5 @@
 
 ## auth status
 ```json
-{"status":"ok","auth_capable":false,"host":"https://v2-preview.aftermath.finance","sources":{"AFTERMATH_PRIVATE_KEY":"not set",...},"credentials_file":{"path":"...","present":false},"missing":["AFTERMATH_PRIVATE_KEY",...]}
+{"status":"ok","auth_capable":false,"host":"https://aftermath.finance","sources":{"AFTERMATH_PRIVATE_KEY":"not set",...},"credentials_file":{"path":"...","present":false},"missing":["AFTERMATH_PRIVATE_KEY",...]}
 ```
